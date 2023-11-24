@@ -1,4 +1,7 @@
 package by.pvt.shawarma.core.exception;
 
-public class ProgramException {
+public class ProgramException extends RuntimeException {
+    public ProgramException(String message) {
+        super(message);
+    }
 }
