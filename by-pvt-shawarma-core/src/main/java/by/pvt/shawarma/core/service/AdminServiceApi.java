@@ -8,10 +8,7 @@ import by.pvt.shawarma.core.exception.AccountException;
 import by.pvt.shawarma.core.mapper.AdminMappers;
 import by.pvt.shawarma.core.repository.AdminRepository;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +28,7 @@ public class AdminServiceApi implements AdminApi, UserDetailsService {
     private final AdminRepository adminRepository;
     private final AdminMappers adminMapper;
     private final PasswordEncoder passwordEncoder;
-    private final HttpServletRequest httpServletRequest;
+
 
     @Transactional
     @Secured({"ADMIN"})
@@ -50,20 +47,16 @@ public class AdminServiceApi implements AdminApi, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         Admin adminResponse = adminRepository.loadUserByUserName(login);
-        UserDetails admin = User.builder()
+        return User.builder()
                 .username(adminResponse.getLogin())
                 .password(adminResponse.getPassword())
                 .roles(adminResponse.getRole())
                 .build();
-        return admin;
     }
 
     @Transactional
     @Override
     public AdminResponse authorise(AdminRequest adminRequest) throws ServletException {
-        httpServletRequest.login(adminRequest.getLogin(), adminRequest.getPassword());
-        HttpSession httpSession = httpServletRequest.getSession();
-        httpSession.setMaxInactiveInterval(30);
         Admin admin = adminRepository.authorise(adminRequest.getLogin(), adminRequest.getPassword());
         if(admin != null){
             return adminMapper.toResponse(admin);

@@ -6,7 +6,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@Table(schema = "shaurmasch", name ="basket_drink")
+@Table(schema = "shaurmasch1", name ="basket_drink")
 @Entity
 @Getter
 @Setter

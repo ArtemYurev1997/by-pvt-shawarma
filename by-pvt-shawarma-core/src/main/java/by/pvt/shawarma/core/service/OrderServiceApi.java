@@ -13,12 +13,15 @@ import by.pvt.shawarma.core.entity.Order;
 import by.pvt.shawarma.core.exception.AccountException;
 import by.pvt.shawarma.core.exception.PaymentException;
 import by.pvt.shawarma.core.exception.ProgramException;
-import by.pvt.shawarma.core.mapper.ClientMappers;
 import by.pvt.shawarma.core.mapper.CommentMappers;
 import by.pvt.shawarma.core.mapper.OrderMappers;
 import by.pvt.shawarma.core.repository.ClientRepository;
 import by.pvt.shawarma.core.repository.CommentRepository;
 import by.pvt.shawarma.core.repository.OrderRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,10 +44,10 @@ public class OrderServiceApi implements OrderApi {
     private final OrderRepository orderRepository;
     private final OrderMappers orderMappers;
     private final ClientRepository clientRepository;
-    private final ClientMappers clientMappers;
     private final CommentRepository commentRepository;
     private final CommentMappers commentMappers;
     private final BasketApi basketApi;
+    private final EntityManager entityManager;
 
 
     public OrderResponse save(OrderRequest orderRequest) {
@@ -74,6 +77,12 @@ public class OrderServiceApi implements OrderApi {
     }
 
 
+    public OrderResponse createOrderZero(OrderRequest orderRequest) {
+        Order order = new Order(null, null, orderRequest.getCount(), orderRequest.getCost(), orderRequest.getDate(), orderRequest.getUserId().getTelephone(), orderRequest.getAddress(), orderRequest.getComment(), Status.UNFORMED.getName(), Status.NO_PAY.getName());
+        orderRepository.save(order);
+        return orderMappers.toResponse(order);
+    }
+
     @Override
     public OrderResponse createOrder(OrderRequest orderRequest) {
         Order order;
@@ -89,8 +98,7 @@ public class OrderServiceApi implements OrderApi {
             }
             return orderMappers.toResponse(order);
         }
-        else
-            throw new AccountException("Заказа с пользователем не существует");
+        else throw new AccountException("Заказа с пользователем не существует");
     }
 
     @Override
@@ -169,7 +177,11 @@ public class OrderServiceApi implements OrderApi {
 
     @Override
     public OrderResponse getOrderById(Long id) {
-        return orderMappers.toResponse(orderRepository.findById(id).get());
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isPresent()) {
+            return orderMappers.toResponse(order.get());
+        }
+        else throw new AccountException("Данный заказ не найден");
     }
 
     public CommentResponse createCommentByClient(CommentRequest commentRequest) {
@@ -188,4 +200,21 @@ public class OrderServiceApi implements OrderApi {
         }
         return commentMappers.toResponse(saveComment);
     }
+
+    public List<OrderResponse> findAllOrdersWhereCostGreaterThan(BigDecimal cost) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
+        Root<Order> order = criteriaQuery.from(Order.class);
+        criteriaQuery.select(order).where(criteriaBuilder.gt(order.get("cost"), cost)).orderBy(criteriaBuilder.asc(order.get("cost")));
+        return entityManager.createQuery(criteriaQuery).getResultList().stream().map(orderMappers::toResponse).collect(Collectors.toList());
+    }
+
+//    public List<Order> findCountAndCost(BigDecimal cost, Long count) {
+//        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
+//        Root<Order> order = criteriaQuery.from(Order.class);
+//        Join<Order, Client> client = order.join("userId");
+//        criteriaQuery.select(order).where(criteriaBuilder.and(criteriaBuilder.equal(client.get("name"), name), criteriaBuilder.equal(client.get("login"), login)));
+//        return entityManager.createQuery(criteriaQuery).getResultList();
+//    }
 }

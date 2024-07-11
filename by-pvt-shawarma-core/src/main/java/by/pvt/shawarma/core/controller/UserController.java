@@ -6,6 +6,7 @@ import by.pvt.shawarma.api.dto.UserRequest;
 import by.pvt.shawarma.api.dto.UserResponse;
 import jakarta.servlet.ServletException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class UserController implements UserApiController {
     }
 
     @Override
-    public UserResponse authorise(UserRequest userRequest) throws ServletException {
-        return userApi.authorise(userRequest);
+    public UserResponse authorise(@RequestBody UserRequest userRequest) throws ServletException {
+        return userApi.authorise(userRequest.getLogin(), userRequest.getPassword());
     }
 }

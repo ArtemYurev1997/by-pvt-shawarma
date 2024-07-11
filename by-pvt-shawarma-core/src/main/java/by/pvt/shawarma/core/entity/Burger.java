@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(schema = "shaurmasch", name ="burger")
+@Table(schema = "shaurmasch1", name ="burger")
 @Entity
 @Getter
 @Setter
@@ -33,7 +33,7 @@ public class Burger {
     private BigDecimal price;
     @OneToMany(mappedBy = "burger")
     private List<BasketBurger> burgerList = new ArrayList<>();
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(schema = "shaurmasch", name = "burger_ingridient",
             joinColumns = {@JoinColumn(name = "burger_id")},
             inverseJoinColumns = {@JoinColumn(name = "ingridient_id")})

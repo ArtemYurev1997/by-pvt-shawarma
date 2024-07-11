@@ -43,7 +43,7 @@ public class OrderServiceTest {
     private OrderServiceApi orderServiceApi;
 
     @Test
-    public void positiveTest() {
+    public void createOrder_positiveTest() {
         Order order = new Order();
         OrderResponse orderResponse = new OrderResponse();
         when(clientRepository.findById(1L)).thenReturn(Optional.of(client()));
@@ -55,7 +55,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void negativeTest() {
+    public void createOrder_negativeTest() {
         lenient().when(clientRepository.findById(2L)).thenReturn(Optional.of(client()));
         Exception exception = assertThrows(AccountException.class, () -> orderServiceApi.createOrder(orderRequest()));
         assertEquals(exception.getMessage(), "Заказа с пользователем не существует");

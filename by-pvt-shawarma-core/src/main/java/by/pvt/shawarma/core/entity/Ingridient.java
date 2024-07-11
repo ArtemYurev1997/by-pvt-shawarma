@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Table(schema = "shaurmasch", name ="ingridient")
+@Table(schema = "shaurmasch1", name ="ingridient")
 @Entity
 @Getter
 @Setter

@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserApi {
     UserResponse register(UserRequest userRequest);
 
-    UserResponse authorise(UserRequest userRequest) throws ServletException;
+    UserResponse authorise(String login, String password) throws ServletException;
 
     void delete(Long id);
 

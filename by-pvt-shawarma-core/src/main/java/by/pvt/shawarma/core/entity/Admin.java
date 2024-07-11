@@ -9,7 +9,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Table(schema = "shaurmasch", name ="admin")
+@Table(schema = "shaurmasch1", name ="admin")
 @Entity
 @Getter
 @Setter

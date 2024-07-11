@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(schema = "shaurmasch", name ="order")
+@Table(schema = "shaurmasch1", name ="order")
 @Entity
 @Getter
 @Setter

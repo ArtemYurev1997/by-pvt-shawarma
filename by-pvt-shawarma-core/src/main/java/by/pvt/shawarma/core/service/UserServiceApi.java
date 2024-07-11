@@ -34,9 +34,6 @@ public class UserServiceApi implements UserApi, UserDetailsService {
 
     @Override
     public UserResponse register(UserRequest userRequest) {
-        if(userRequest.getLogin() != null) {
-            throw new AccountException("Логин занят!");
-        }
         User user = userMappers.toEntity(userRequest);
         String password = passwordEncoder.encode(userRequest.getPassword());
         user.setPassword(password);
@@ -45,16 +42,11 @@ public class UserServiceApi implements UserApi, UserDetailsService {
     }
 
     @Override
-    public UserResponse authorise(UserRequest userRequest) throws ServletException {
-        httpServletRequest.login(userRequest.getLogin(), userRequest.getPassword());
+    public UserResponse authorise(String login, String password) throws ServletException {
+        httpServletRequest.login(login, password);
         HttpSession httpSession = httpServletRequest.getSession();
         httpSession.setMaxInactiveInterval(30);
-        User user = userRepository.authorise(userRequest.getLogin(), userRequest.getPassword());
-        if(user != null){
-            return userMappers.toResponse(user);
-        } else {
-            throw new AccountException("Пользователь не найден!");
-        }
+        return new UserResponse();
     }
 
 

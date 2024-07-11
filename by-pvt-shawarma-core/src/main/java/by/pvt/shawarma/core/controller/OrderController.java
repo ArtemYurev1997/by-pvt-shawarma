@@ -143,4 +143,11 @@ public class OrderController implements OrderApiController {
     public Long totalCountOfOrder(@RequestBody OrderRequest orderRequest) {
         return basketApi.totalCountAllBasketsForOrder(orderRequest.getId());
     }
+
+    @Override
+    public List<OrderResponse> findAllOrdersWhereCostGreaterThan(OrderRequest orderRequest) {
+        return orderApi.findAllOrdersWhereCostGreaterThan(orderRequest.getCost());
+    }
+
+
 }

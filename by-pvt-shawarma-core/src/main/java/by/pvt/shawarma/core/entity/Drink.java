@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(schema = "shaurmasch", name ="drink")
+@Table(schema = "shaurmasch1", name ="drink")
 @Entity
 @Getter
 @Setter

@@ -8,7 +8,6 @@ import by.pvt.shawarma.core.exception.AccountException;
 import by.pvt.shawarma.core.mapper.ClientMappers;
 import by.pvt.shawarma.core.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-//@Primary
 public class ClientServiceApi implements ClientApi, UserDetailsService {
     private final ClientRepository clientRepository;
     private final ClientMappers clientMappers;
@@ -33,7 +31,7 @@ public class ClientServiceApi implements ClientApi, UserDetailsService {
     @Override
     @Transactional
     public ClientResponse register(ClientRequest clientRequest) {
-        if (clientRequest.getName().equals("") | clientRequest.getSurname().equals("") | clientRequest.getLogin().equals("") | clientRequest.getPassword().equals("")) {
+        if (clientRequest.getName().isEmpty() | clientRequest.getSurname().isEmpty() | clientRequest.getLogin().isEmpty() | clientRequest.getPassword().isEmpty()) {
             throw new AccountException("Введите обязательные поля!");
         }
         if (clientRequest.getLogin() != null) {
@@ -57,12 +55,11 @@ public class ClientServiceApi implements ClientApi, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         Client client = clientRepository.loadUserByUserName(login);
-        UserDetails user = User.builder()
+        return User.builder()
                 .username(client.getLogin())
                 .password(client.getPassword())
                 .roles(client.getRole()).authorities(client.getAuthorities())
                 .build();
-        return user;
     }
 
     @Transactional
@@ -84,7 +81,6 @@ public class ClientServiceApi implements ClientApi, UserDetailsService {
 
     @Override
     @Transactional
-    @Secured({"ADMIN"})
     public List<ClientResponse> update(ClientRequest clientRequest) {
         Optional<Client> client = clientRepository.findById(clientRequest.getId());
         String password = passwordEncoder.encode(clientRequest.getPassword());
