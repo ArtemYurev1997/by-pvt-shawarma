@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: classpath:db/changelog/changeset/001-create-tables.yaml
+  - include:
+      file: classpath:db/changelog/changeset/002-add-foreign-key-constraint.yaml
+  - include:
+      file: classpath:db/changelog/changeset/003-add-autoincrement.yaml
+#  - include:
+#      file: classpath:db/changelog/changeset/004-fill-tables.yaml

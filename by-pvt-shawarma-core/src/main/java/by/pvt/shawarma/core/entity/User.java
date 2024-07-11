@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Table(schema = "shaurmasch", name ="user")
+@Table(schema = "shaurmasch1", name ="user")
 @Entity
 @Getter
 @Setter
@@ -19,14 +19,16 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "seq_user", sequenceName = "user_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user") ///ПРОБЛЕМА С ОРДЕРАМИ И ОШИБКИ АЙДИ
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "surname", nullable = false)
     private String surname;
-    @Column(name = "login", nullable = false)
+    @Column(name = "login")
     private String login;
     @Column(name = "password", nullable = false)
     private String password;

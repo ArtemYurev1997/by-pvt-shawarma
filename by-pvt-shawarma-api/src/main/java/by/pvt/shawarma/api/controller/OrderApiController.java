@@ -72,4 +72,7 @@ public interface OrderApiController {
 
     @PostMapping("/totalCount")
     Long totalCountOfOrder(@RequestBody OrderRequest orderRequest);
+
+    @PostMapping("/findCostGreaterThan")
+    List<OrderResponse> findAllOrdersWhereCostGreaterThan(@RequestBody OrderRequest orderRequest);
 }

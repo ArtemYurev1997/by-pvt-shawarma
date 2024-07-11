@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Table(schema = "shaurmasch", name ="client")
+@Table(schema = "shaurmasch1", name ="client")
 @Entity
 @Getter
 @Setter

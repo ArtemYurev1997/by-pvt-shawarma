@@ -6,6 +6,7 @@ import by.pvt.shawarma.api.dto.OrderRequest;
 import by.pvt.shawarma.api.dto.OrderResponse;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderApi {
@@ -36,4 +37,6 @@ public interface OrderApi {
     OrderResponse getOrderById(Long id);
 
     CommentResponse createCommentByClient(CommentRequest commentRequest);
+
+    List<OrderResponse> findAllOrdersWhereCostGreaterThan(BigDecimal cost);
 }

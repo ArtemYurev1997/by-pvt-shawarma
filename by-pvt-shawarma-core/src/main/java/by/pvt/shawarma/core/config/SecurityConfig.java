@@ -54,7 +54,8 @@ public class SecurityConfig  {
                 .requestMatchers(HttpMethod.POST, "/clients/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.GET, "/clients/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/admins/**").authenticated()
-                .requestMatchers("/users/authorise").permitAll());
+                .requestMatchers("/users/authorise").permitAll()
+                .requestMatchers(HttpMethod.POST,"/users/**").permitAll());
         return http.build();
     }
 }

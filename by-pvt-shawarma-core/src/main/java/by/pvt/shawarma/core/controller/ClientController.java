@@ -1,6 +1,7 @@
 package by.pvt.shawarma.core.controller;
 
 import by.pvt.shawarma.api.contract.ClientApi;
+import by.pvt.shawarma.api.controller.ClientApiController;
 import by.pvt.shawarma.api.dto.ClientRequest;
 import by.pvt.shawarma.api.dto.ClientResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class ClientController {
+public class ClientController implements ClientApiController {
     private final ClientApi clientApi;
 
     public ClientController(@Qualifier("clientServiceApi") ClientApi clientApi) {
